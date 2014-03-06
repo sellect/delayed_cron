@@ -1,7 +1,7 @@
-# run cron jobs using sidekiq
+# run cron jobs with sidekiq, delayed_job, or resque
 
 ### DEPENDENCIES:
-- sidekick
+- background process handler: sidekiq, delayed_job, or resque
 
 ### USE IN MODEL
 ```ruby

@@ -1,0 +1,20 @@
+$:.push File.expand_path("../lib", __FILE__)
+require "delayed_cron/version"
+
+Gem::Specification.new do |s|
+  s.name        = %q{delayed_cron}
+  s.version     = DelayedCron::VERSION
+
+  s.authors     = ["Justin Grubbs"]
+  s.summary     = %q{Run your cron jobs with sidekiq, delayed_job, or resque.}
+  s.description = %q{Run your cron jobs with sidekiq, delayed_job, or resque.}
+  s.email       = %q{justin@sellect.com}
+  s.homepage    = %q{http://github.com/sellect/delayed_cron}
+
+  s.add_development_dependency 'delayed_job'
+  s.add_development_dependency 'resque'
+  s.add_development_dependency 'sidekiq'
+
+  s.files         = `git ls-files`.split("\n")
+  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+end
