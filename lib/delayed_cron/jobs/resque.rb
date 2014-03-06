@@ -5,12 +5,12 @@ module DelayedCron
     class Resque
       @queue = :cron_job
 
-      def self.enqueue_delayed_cron(instance_klass, instance_id, attachment_name)
-        ::Resque.enqueue(self, instance_klass, instance_id, attachment_name)
+      def self.enqueue_delayed_cron(klass, method_name, options)
+        # FIXME: need to find resque's equivalent to sidekiq's perform_in method
       end
 
-      def self.perform(instance_klass, instance_id, attachment_name)
-        DelayedCron.process_job(instance_klass, instance_id, attachment_name)
+      def self.perform(klass, method_name, options)
+        DelayedCron.process_job(klass, method_name, options)
       end
     end
   end

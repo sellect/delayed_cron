@@ -17,7 +17,7 @@ module DelayedCron
 
   class Railtie
 
-    # Glue includes DelayedCron Class Methods and Instance Methods into ActiveRecord
+    # Glue includes DelayedCron Class Methods into ActiveRecord
     def self.insert
       ActiveRecord::Base.send(:include, DelayedCron::Glue)
     end
