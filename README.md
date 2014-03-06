@@ -4,6 +4,12 @@ run cron jobs with sidekiq, delayed_job, or resque
 ### DEPENDENCIES:
 - background process handler: sidekiq, delayed_job, or resque
 
+### INSTALL 
+
+```ruby
+gem "delayed_cron"
+```
+
 ### USE IN MODEL
 ```ruby
 class Product < ActiveRecord::Base
