@@ -1,4 +1,5 @@
-# run cron jobs with sidekiq, delayed_job, or resque
+# DelayedCron
+run cron jobs with sidekiq, delayed_job, or resque
 
 ### DEPENDENCIES:
 - background process handler: sidekiq, delayed_job, or resque
