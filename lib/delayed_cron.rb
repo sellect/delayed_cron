@@ -1,6 +1,5 @@
 require 'delayed_cron/jobs'
 require 'delayed_cron/railtie'
-require 'delayed_cron/cron_job'
 
 module DelayedCron
 
@@ -19,7 +18,7 @@ module DelayedCron
         klass = job.split(".").first
         name  = job.split(".").last.to_sym
         # TODO: raise error if interval is not set from config
-        CronJob.define_on(klass, name, { interval: default_interval })
+        DelayedCron.schedule(klass, name, { interval: default_interval })
       end
     end
 
@@ -30,7 +29,6 @@ module DelayedCron
     end
 
     def schedule(klass, method_name, options)
-      # FIXME: schedule only if this has not been scheduled already
       processor.enqueue_delayed_cron(klass, method_name, options)
     end
 
@@ -51,7 +49,7 @@ module DelayedCron
   module ClassMethods
 
     def cron_job(name, options = { interval: DelayedCron.default_interval })
-      CronJob.define_on(self.name.to_s, name, options)
+      DelayedCron.schedule(self.name.to_s, name, options)
     end
 
   end
