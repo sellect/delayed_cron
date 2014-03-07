@@ -42,3 +42,8 @@ DelayedCron.setup do |config|
 
 end
 ```
+
+### TO DO:
+- add support for Resque
+- add support for DelayedJob
+- add test suite, most likely rspec
