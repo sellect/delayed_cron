@@ -43,6 +43,19 @@ DelayedCron.setup do |config|
 end
 ```
 
+### NOTES:
+
+- when using with sidekiq and rails there can be a config/initializer load order issue. Below is a fix to insure sidekiq is loaded first
+```ruby
+Rails.application.config.after_initialize do  
+  DelayedCron.setup do |config|
+    ...
+  end
+end
+```
+This initializes dealyed cron after all other initializers have loaded.
+
+
 ### TO DO:
 - add support for Resque
 - add support for DelayedJob
