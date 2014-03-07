@@ -35,7 +35,7 @@ end
 DelayedCron.setup do |config|
 
   # default interval to run cron jobs
-  config.interval = 10.minutes
+  config.default_interval = 10.minutes
 
   # array of methods to run at the above configured interval
   config.cron_jobs = [ "Trunk::Location.count", "Ad.count" ]
