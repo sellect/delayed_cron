@@ -18,7 +18,7 @@ class Product < ActiveRecord::Base
 
   # define in model
   # * this is an alternative to the methods array in config
-  # - override inteveral from setup
+  # - override default_inteveral from setup
   cron_job :some_method_to_run_as_cron, interval: 15.minutes
 
   def some_method_to_run_as_cron
@@ -38,7 +38,7 @@ DelayedCron.setup do |config|
   config.default_interval = 10.minutes
 
   # array of methods to run at the above configured interval
-  config.cron_jobs = [ "Trunk::Location.count", "Ad.count" ]
+  config.cron_jobs = [ "SomeClass.expensive_task", "AnotherClass.other_expensive_task" ]
 
 end
 ```
