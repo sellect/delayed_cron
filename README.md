@@ -7,7 +7,7 @@ run cron jobs with sidekiq, delayed_job, or resque
 ### INSTALL 
 
 ```ruby
-gem "delayed_cron"
+gem "delayed_cron", git: "git@github.com:sellect/delayed_cron", tag: "v0.1.0"
 ```
 
 ### USE IN MODEL
