@@ -30,7 +30,7 @@ module DelayedCron
 
     def schedule(klass, method_name, options)
       if options[:at]
-        options[:interval] = adjust_interval(beginning_of_day(options[:inverval]), options[:at])
+        options[:interval] = adjust_interval(beginning_of_day(options[:interval].to_i), options[:at])
       end
       processor.enqueue_delayed_cron(klass, method_name, options)
     end
@@ -51,7 +51,7 @@ module DelayedCron
       tz   = time[3] || Time.now.strftime("%z").to_i
       secs = time[2] || 0
       hours, mins = time[0], time[1]
-      adjusted_date = DateTime.civil(date.year, date.month, date.year, hours, mins, secs, Rational(tz, 2400))
+      adjusted_date = DateTime.civil(date.year, date.month, date.day, hours, mins, secs, Rational(tz, 2400))
       adjusted_date.to_i - Time.now.to_i
     end
 
