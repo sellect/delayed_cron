@@ -49,7 +49,8 @@ module DelayedCron
     def adjust_interval(date, time_string)
       time = time_string.split(/:|\ /).map(&:to_i)
       tz   = time[3] || Time.now.strftime("%z").to_i
-      hours, mins, secs = time[0], time[1], time[2]
+      secs = time[2] || 0
+      hours, mins = time[0], time[1]
       adjusted_date = DateTime.civil(date.year, date.month, date.year, hours, mins, secs, Rational(tz, 2400))
       adjusted_date.to_i - Time.now.to_i
     end
