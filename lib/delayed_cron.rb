@@ -64,16 +64,6 @@ module DelayedCron
 
   module ClassMethods
 
-    # USAGE IN MODEL
-    #
-    # cron_job :some_method, interval: 1.month, at: "00:00:00"
-    # 
-    # name: some_method      # REQUIRED - class method to be called
-    # options: {
-    #   interval: 1.month,   # OPTIONAL - time interval for cron, defaults to default_interval from config/initializers/delayed_cron.rb
-    #   at: "00:00:00 -0400" # OPTIONAL - timestamp for when a job should be run. Timezone is optional, defaults to default timezone for server
-    # }
-    #
     def cron_job(name, options = { interval: DelayedCron.default_interval })
       DelayedCron.schedule(self.name.to_s, name, options)
     end

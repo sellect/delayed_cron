@@ -19,7 +19,7 @@ class Product < ActiveRecord::Base
   # Define in Model
   # * this is an alternative to the methods array in config
   #
-  # OPTIONS
+  # OPTIONS: *optional
   # - interval - override default_inteveral from setup
   # - at       - set time of day the cron should be run, timezone is optional
   cron_job :some_method_to_run_as_cron, interval: 3.days, at: "00:00:00 -0400"
