@@ -29,6 +29,9 @@ module DelayedCron
     end
 
     def schedule(klass, method_name, options)
+      if options[:at]
+        options[:interval] = adjust_interval(beginning_of_day(options[:interval].to_i), options[:at])
+      end
       processor.enqueue_delayed_cron(klass, method_name, options)
     end
 
@@ -36,6 +39,20 @@ module DelayedCron
       # TODO: add ability to send args to klass method
       klass.constantize.send(method_name)
       schedule(klass, method_name, options)
+    end
+
+    def beginning_of_day(seconds)
+      # returns the beginning of the day for the interval
+      (Time.now + seconds).beginning_of_day
+    end
+
+    def adjust_interval(date, time_string)
+      time = time_string.split(/:|\ /).map(&:to_i)
+      tz   = time[3] || Time.now.strftime("%z").to_i
+      secs = time[2] || 0
+      hours, mins = time[0], time[1]
+      adjusted_date = DateTime.civil(date.year, date.month, date.day, hours, mins, secs, Rational(tz, 2400))
+      adjusted_date.to_i - Time.now.to_i
     end
 
   end

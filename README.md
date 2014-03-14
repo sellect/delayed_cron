@@ -16,10 +16,13 @@ class Product < ActiveRecord::Base
 
   ...
 
-  # define in model
+  # Define in Model
   # * this is an alternative to the methods array in config
-  # - override default_inteveral from setup
-  cron_job :some_method_to_run_as_cron, interval: 15.minutes
+  #
+  # OPTIONS: *optional
+  # - interval - override default_inteveral from setup
+  # - at       - set time of day the cron should be run, timezone and seconds are optional
+  cron_job :some_method_to_run_as_cron, interval: 3.days, at: "00:00:00 -0400"
 
   def some_method_to_run_as_cron
     # this method will be run every 15 minutes
