@@ -7,7 +7,7 @@ run cron jobs with sidekiq, delayed_job, or resque
 ### INSTALL 
 
 ```ruby
-gem "delayed_cron", git: "git@github.com:sellect/delayed_cron", tag: "v0.1.0"
+gem "delayed_cron", git: "sellect/delayed_cron", tag: "v0.1.0"
 ```
 
 ### USE IN MODEL
@@ -21,7 +21,7 @@ class Product < ActiveRecord::Base
   #
   # OPTIONS: *optional
   # - interval - override default_inteveral from setup
-  # - at       - set time of day the cron should be run, timezone is optional
+  # - at       - set time of day the cron should be run, timezone and seconds are optional
   cron_job :some_method_to_run_as_cron, interval: 3.days, at: "00:00:00 -0400"
 
   def some_method_to_run_as_cron
