@@ -29,6 +29,9 @@ module DelayedCron
     end
 
     def schedule(klass, method_name, options)
+      if options[:at]
+        options[:interval] = adjust_interval(beginning_of_day(options[:inverval]), options[:at])
+      end
       processor.enqueue_delayed_cron(klass, method_name, options)
     end
 
@@ -36,6 +39,19 @@ module DelayedCron
       # TODO: add ability to send args to klass method
       klass.constantize.send(method_name)
       schedule(klass, method_name, options)
+    end
+
+    def beginning_of_day(seconds)
+      # returns the beginning of the day for the interval
+      (Time.now + seconds).beginning_of_day
+    end
+
+    def adjust_interval(date, time_string)
+      time = time_string.split(/:|\ /).map(&:to_i)
+      tz   = time[3] || Time.now.strftime("%z").to_i
+      hours, mins, secs = time[0], time[1], time[2]
+      adjusted_date = DateTime.civil(date.year, date.month, date.year, hours, mins, secs, Rational(tz, 2400))
+      adjusted_date.to_i - Time.now.to_i
     end
 
   end
@@ -48,6 +64,16 @@ module DelayedCron
 
   module ClassMethods
 
+    # USAGE IN MODEL
+    #
+    # cron_job :some_method, interval: 1.month, at: "00:00:00"
+    # 
+    # name: some_method      # REQUIRED - class method to be called
+    # options: {
+    #   interval: 1.month,   # OPTIONAL - time interval for cron, defaults to default_interval from config/initializers/delayed_cron.rb
+    #   at: "00:00:00 -0400" # OPTIONAL - timestamp for when a job should be run. Timezone is optional, defaults to default timezone for server
+    # }
+    #
     def cron_job(name, options = { interval: DelayedCron.default_interval })
       DelayedCron.schedule(self.name.to_s, name, options)
     end
