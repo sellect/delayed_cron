@@ -65,4 +65,3 @@ This initializes dealyed cron after all other initializers have loaded.
 ### TO DO:
 - add support for Resque
 - add support for DelayedJob
-- add test suite, most likely rspec
