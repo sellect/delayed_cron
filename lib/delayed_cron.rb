@@ -45,12 +45,17 @@ module DelayedCron
     end
 
     def adjust_interval(date, time_string)
-      time = time_string.split(/:|\ /).map(&:to_i)
-      tz   = time[3] || Time.now.strftime("%z").to_i
-      secs = time[2] || 0
-      hours, mins = time[0], time[1]
-      adjusted_date = DateTime.civil(date.year, date.month, date.day, hours, mins, secs, Rational(tz, 2400))
+      time = parse_time(time_string)
+      adjusted_date = DateTime.civil(date.year, date.month, date.day, time.hours, time.mins, time.secs, Rational(time.tz, 2400))
       adjusted_date.to_i - Time.now.to_i
+    end
+
+    def parse_time(string)
+      time_array = time_string.split(/:|\ /).map(&:to_i)
+      time = { 
+        hours: time_array[0], mins: time_array[1], 
+        secs: time_array[2] || 0, tz: time_array[3] || Time.now.strftime("%z").to_i
+      }
     end
 
   end
