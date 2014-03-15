@@ -15,8 +15,7 @@ module DelayedCron
     def define_cron_jobs
       return false unless cron_jobs.present?
       cron_jobs.each do |job|
-        klass = job.split(".").first
-        name  = job.split(".").last.to_sym
+        klass, name = job.split(".")
         # TODO: raise error if interval is not set from config
         DelayedCron.schedule(klass, name, { interval: default_interval })
       end
@@ -42,7 +41,6 @@ module DelayedCron
     end
 
     def beginning_of_day(seconds)
-      # returns the beginning of the day for the interval
       (Time.now + seconds).beginning_of_day
     end
 
