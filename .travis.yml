@@ -10,7 +10,7 @@ services:
   - redis
 
 script:
-- rspec
+- bundle exec rake 
 
 notifications:
   email:
