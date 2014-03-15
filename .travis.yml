@@ -1,0 +1,22 @@
+language: ruby
+rvm:
+  - 2.0.0
+
+matrix:
+  allow_failures:
+    - rvm: rbx-19mode
+
+services:
+  - redis
+
+script:
+- respec
+
+notifications:
+  email:
+    - justin@jgrubbs.net
+
+gemfile:
+  - Gemfile
+
+
