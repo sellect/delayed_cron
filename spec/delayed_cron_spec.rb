@@ -12,6 +12,11 @@ describe DelayedCron do
       end
     end
 
+    it "sends cron jobs to define_cron_jobs" do
+      DelayedCron.should_receive(:define_cron_jobs)
+      setup(default_interval: 1.hour)
+    end
+
   end
 
   describe ".define_cron_jobs" do
@@ -54,16 +59,25 @@ describe DelayedCron do
   end
 
   describe ".process_job" do
+
     it "should call the cron jobs method" do
       klass = build_class("SomeClass", "long_method", {})
       klass.should_receive(:long_method)
       DelayedCron.process_job(klass.name, "long_method", {})
     end
+
+    it "should reschedule the cron job after processing" do
+      pending
+    end
+
   end
 
   describe ".beginning_of_day" do
     it "returns the beginning of the day for the interval" do
-      pending
+      seconds = 2.days.to_i
+      beginning_of_day_2_days_from_now = DelayedCron.beginning_of_day(seconds)
+      expect(beginning_of_day_2_days_from_now).to be <  2.days.from_now
+      expect(beginning_of_day_2_days_from_now).to be >  1.day.from_now
     end
   end
 
