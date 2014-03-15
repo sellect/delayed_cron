@@ -10,7 +10,7 @@ services:
   - redis
 
 script:
-- respec
+- rspec
 
 notifications:
   email:
