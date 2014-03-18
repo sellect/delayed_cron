@@ -6,12 +6,21 @@ module DelayedCron
 
       def self.enqueue_delayed_cron(klass, method_name, options)
         unless scheduled?(klass, method_name)
-          # TODO: need to find delayed_job's equivalent to sidekiq's perform_in method
+          options.symbolize_keys!
+          ::Delayed::Job.enqueue(
+            :payload_object => new(klass, method_name, options),
+            :run_at => Time.now + options[:interval],
+            :queue => :cron_job
+          )
         end
       end
 
       def self.scheduled?(klass, method_name)
-        # TODO: returns true if job is already scheduled
+        ::Delayed::Job.all.each do |job|
+          obj = YAML.load(job.handler)
+          scheduled = true if obj["object"] == klass && obj["method_name"] == method_name.to_s
+        end
+        scheduled ||= false
       end
 
       def perform(klass, method_name, options)
