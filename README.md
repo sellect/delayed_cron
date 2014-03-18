@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/sellect/delayed_cron.png?branch=develop)](https://travis-ci.org/sellect/delayed_cron)
+[![Code Climate](https://codeclimate.com/github/sellect/delayed_cron.png?branch=develop)](https://codeclimate.com/github/sellect/delayed_cron)
+
 # DelayedCron
 run cron jobs with sidekiq, delayed_job, or resque
 
@@ -24,7 +27,7 @@ class Product < ActiveRecord::Base
   # - at       - set time of day the cron should be run, timezone and seconds are optional
   cron_job :some_method_to_run_as_cron, interval: 3.days, at: "00:00:00 -0400"
 
-  def some_method_to_run_as_cron
+  def self.some_method_to_run_as_cron
     # this method will be run every 15 minutes
   end
 
@@ -62,4 +65,3 @@ This initializes dealyed cron after all other initializers have loaded.
 ### TO DO:
 - add support for Resque
 - add support for DelayedJob
-- add test suite, most likely rspec
