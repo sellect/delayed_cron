@@ -67,7 +67,10 @@ describe DelayedCron do
     end
 
     it "should reschedule the cron job after processing" do
-      pending
+      klass, name = "SomeClass", "test_method"
+      build_class(klass, name)
+      DelayedCron.should_receive(:schedule).with.with(klass, name, {})
+      DelayedCron.process_job(klass, name, {})
     end
 
   end
@@ -83,13 +86,21 @@ describe DelayedCron do
 
   describe ".adjust_interval" do
     it "adjusts the interval based on the :at option" do
-      pending
+      # Set Time.now to January 1, 2014 12:00:00 PM
+      Timecop.freeze(Time.local(2014, 1, 1, 12, 0, 0))
+      interval = 9.days
+      adjusted_interval = interval - 12.hours
+      DelayedCron.processor.should_receive(:enqueue_delayed_cron)
+                 .with("SomeClass", "long_method", { interval: adjusted_interval.to_i, at: "00:00" })
+      DelayedCron.schedule("SomeClass", "long_method", { interval: interval, at: "00:00" })
     end
   end
 
   describe "cron_job" do
     it "schedules cron jobs found in a model" do
-      pending
+      klass, name = "SomeClass", "some_method"
+      DelayedCron.should_receive(:schedule).with(klass, name, {})
+      build_class(klass, name)
     end
   end
 

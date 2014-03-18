@@ -25,9 +25,9 @@ def setup(options)
   end
 end
 
-def build_class(class_name, name, options)
+def build_class(class_name, name, options = {})
   # setup class and include delayed_cron
-  options ||= {}
+
   ActiveRecord::Base.send(:include, DelayedCron::Glue)
   Object.send(:remove_const, class_name) rescue nil
 
@@ -39,6 +39,9 @@ def build_class(class_name, name, options)
     include DelayedCron::Glue
 
     cron_job name, options
+
+    def self.test_method
+    end
 
   end
   
