@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/sellect/delayed_cron.png?branch=develop)](https://travis-ci.org/sellect/delayed_cron)
-[![Code Climate](https://codeclimate.com/github/sellect/delayed_cron.png?branch=develop)](https://codeclimate.com/github/sellect/delayed_cron)
+[![Build Status](https://travis-ci.org/sellect/delayed_cron.png?branch=master)](https://travis-ci.org/sellect/delayed_cron)
+[![Code Climate](https://codeclimate.com/github/sellect/delayed_cron.png?branch=master)](https://codeclimate.com/github/sellect/delayed_cron)
 
 # DelayedCron
 run cron jobs with sidekiq, delayed_job, or resque
@@ -10,7 +10,7 @@ run cron jobs with sidekiq, delayed_job, or resque
 ### INSTALL 
 
 ```ruby
-gem "delayed_cron", git: "git@github.com:sellect/delayed_cron", tag: "v0.1.0"
+gem "delayed_cron", "0.2.0"
 ```
 
 ### USE IN MODEL
