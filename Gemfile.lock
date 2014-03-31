@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    delayed_cron (0.1.0)
+    delayed_cron (0.2.0)
 
 GEM
   remote: https://rubygems.org/
