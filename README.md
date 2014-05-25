@@ -28,7 +28,7 @@ class Product < ActiveRecord::Base
   cron_job :some_method_to_run_as_cron, interval: 3.days, at: "00:00:00 -0400"
 
   def self.some_method_to_run_as_cron
-    # this method will be run every 15 minutes
+    # this method will be run every 3 days at midnight
   end
 
   ...
