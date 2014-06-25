@@ -18,7 +18,7 @@ module DelayedCron
       def self.scheduled?(klass, method_name)
         ::Delayed::Job.all.each do |job|
           obj = YAML.load(job.handler)
-          scheduled = true if obj["object"] == klass && obj["method_name"] == method_name.to_s
+          scheduled = true if obj["klass"] == klass && obj["method_name"] == method_name
         end
         scheduled ||= false
       end
