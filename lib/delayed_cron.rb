@@ -22,9 +22,10 @@ module DelayedCron
     end
 
     def processor
-      return DelayedCron::Jobs::DelayedJob if defined? ::Delayed::Job
-      return DelayedCron::Jobs::Resque     if defined? ::Resque
-      return DelayedCron::Jobs::Sidekiq    if defined? ::Sidekiq
+      return DelayedCron::Jobs::DelayedJob  if defined? ::Delayed::Job
+      return DelayedCron::Jobs::Resque      if defined? ::Resque
+      return DelayedCron::Jobs::Sidekiq     if defined? ::Sidekiq
+      return DelayedCron::Jobs::SuckerPunch if defined? ::SuckerPunch
     end
 
     def schedule(klass, method_name, options)
@@ -56,9 +57,9 @@ module DelayedCron
     def parse_time(time_array)
       { 
         hours: time_array[0], 
-        mins: time_array[1], 
-        secs: time_array[2] || 0, 
-        tz: time_array[3] || Time.now.strftime("%z").to_i
+        mins:  time_array[1], 
+        secs:  time_array[2] || 0, 
+        tz:    time_array[3] || Time.now.strftime("%z").to_i
       }
     end
 
@@ -73,6 +74,7 @@ module DelayedCron
   module ClassMethods
 
     def cron_job(name, options = { interval: DelayedCron.default_interval })
+      return false if options.delete(:if) == false
       DelayedCron.schedule(self.name.to_s, name, options)
     end
 

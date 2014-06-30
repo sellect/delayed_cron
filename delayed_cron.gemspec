@@ -6,14 +6,15 @@ Gem::Specification.new do |s|
   s.version     = DelayedCron::VERSION
 
   s.authors     = ["Justin Grubbs"]
-  s.summary     = %q{Run your cron jobs with sidekiq, delayed_job, or resque.}
-  s.description = %q{Run your cron jobs with sidekiq, delayed_job, or resque.}
+  s.summary     = %q{Run your cron jobs with sidekiq, delayed_job, resque, or sucker_punch.}
+  s.description = %q{Run your cron jobs with sidekiq, delayed_job, resque, or sucker_punch.}
   s.email       = %q{justin@sellect.com}
   s.homepage    = %q{http://github.com/sellect/delayed_cron}
 
   s.add_development_dependency "delayed_job"
   s.add_development_dependency "resque"
   s.add_development_dependency "sidekiq"
+  s.add_development_dependency "sucker_punch"
   s.add_development_dependency "rspec"
   s.add_development_dependency "rails"
   s.add_development_dependency "debugger"
