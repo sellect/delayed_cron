@@ -2,15 +2,15 @@
 [![Code Climate](https://codeclimate.com/github/sellect/delayed_cron.png?branch=develop)](https://codeclimate.com/github/sellect/delayed_cron)
 
 # DelayedCron
-run cron jobs with sidekiq, delayed_job, or resque
+run cron jobs with sidekiq, delayed_job, resque, or sucker_punch
 
 ### DEPENDENCIES:
-- background process handler: sidekiq, delayed_job, or resque
+- background process handler: sidekiq, delayed_job, resque, or sucker_punch
 
 ### INSTALL 
 
 ```ruby
-gem "delayed_cron", git: "git@github.com:sellect/delayed_cron", tag: "v0.1.0"
+gem "delayed_cron", "0.2.2"
 ```
 
 ### USE IN MODEL
