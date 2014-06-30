@@ -1,4 +1,5 @@
 require 'sidekiq/worker'
+require 'sidekiq/api'
 
 module DelayedCron
   module Jobs
