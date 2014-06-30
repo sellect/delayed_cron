@@ -74,6 +74,7 @@ module DelayedCron
   module ClassMethods
 
     def cron_job(name, options = { interval: DelayedCron.default_interval })
+      return false unless options.delete(:if)
       DelayedCron.schedule(self.name.to_s, name, options)
     end
 
