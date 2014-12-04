@@ -97,10 +97,26 @@ describe DelayedCron do
   end
 
   describe "cron_job" do
-    it "schedules cron jobs found in a model" do
-      klass, name = "SomeClass", "some_method"
-      DelayedCron.should_receive(:schedule).with(klass, name, {})
-      build_class(klass, name)
+    context 'if not present' do
+      it "schedules cron jobs found in a model" do
+        klass, name = "SomeClass", "some_method"
+        DelayedCron.should_receive(:schedule).with(klass, name, {})
+        build_class(klass, name)
+      end
+    end
+    context 'if present and true' do
+      it "schedules cron jobs found in a model" do
+        klass, name = "SomeClass", "some_method"
+        DelayedCron.should_receive(:schedule).with(klass, name, {})
+        build_class(klass, name, {if: true})
+      end
+    end
+    context 'if present and false' do
+      it "schedules cron jobs found in a model" do
+        klass, name = "SomeClass", "some_method"
+        DelayedCron.should_not_receive(:schedule).with(klass, name, {})
+        build_class(klass, name, {if: false})
+      end
     end
   end
 
