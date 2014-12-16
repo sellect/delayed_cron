@@ -54,7 +54,7 @@ describe DelayedCron do
     it "schedules cron jobs" do
       DelayedCron.schedule("SomeClass", "long_method", { interval: 1.hour })
       expect(DelayedCron.processor).to be_processed_in :cron_job
-      expect(DelayedCron.processor).to have(1).jobs
+      expect(DelayedCron.processor.jobs.size).to eq(1)
     end
   end
 
