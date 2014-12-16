@@ -16,11 +16,12 @@ module DelayedCron
       end
 
       def self.scheduled?(klass, method_name)
-        ::Delayed::Job.all.each do |job|
-          obj = YAML.load(job.handler)
+        scheduled = false
+        ::Delayed::Job.where(:queue => :cron_job).each do |job|
+          obj = YAML.load_dj(job.handler)
           scheduled = true if obj["klass"] == klass && obj["method_name"] == method_name
         end
-        scheduled ||= false
+        scheduled
       end
 
       def perform(klass, method_name, options)
