@@ -5,7 +5,7 @@ require 'rspec-sidekiq'
 describe DelayedCron do
 
   describe ".setup" do
-    
+
     it "yields self" do
       DelayedCron.setup do |config|
         DelayedCron.should == config
@@ -31,11 +31,22 @@ describe DelayedCron do
       DelayedCron.cron_jobs.should be_an(Array)
     end
 
+    let(:options) do
+      {
+        default_interval: 1.hour,
+        cron_jobs: [
+          "SomeClass.long_method",
+          { job: "AnotherClass.expensive_method", interval: 1.hour }
+        ]
+      }
+    end
+
     it "sends cron_jobs to schedule" do
-      options = { default_interval: 1.hour, cron_jobs: ["SomeClass.long_method", "AnotherClass.expensive_method"] }
       options[:cron_jobs].each do |cron_job|
-        klass, method_name = cron_job.split(".")
-        DelayedCron.should_receive(:schedule).with(klass, method_name, { interval: options[:default_interval] })
+        job_is_hash = cron_job.is_a?(Hash)
+        klass, method_name = job_is_hash ? cron_job[:job].split(".") : cron_job.split(".")
+        interval = job_is_hash ? cron_job[:interval] : options[:default_interval]
+        DelayedCron.should_receive(:schedule).with(klass, method_name, { interval: interval })
       end
       setup(options)
     end

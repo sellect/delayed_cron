@@ -15,9 +15,13 @@ module DelayedCron
     def define_cron_jobs
       return false unless cron_jobs.present?
       cron_jobs.each do |job|
+        obj         = job
+        job_is_hash = job.is_a?(Hash)
+        job         = job_is_hash ? obj[:job] : job
+        interval    = job_is_hash ? obj[:interval] : default_interval
         klass, name = job.split(".")
-        # TODO: raise error if interval is not set from config
-        DelayedCron.schedule(klass, name, { interval: default_interval })
+        # TODO: raise error if interval is not set
+        DelayedCron.schedule(klass, name, { interval: interval })
       end
     end
 
@@ -55,10 +59,10 @@ module DelayedCron
     end
 
     def parse_time(time_array)
-      { 
-        hours: time_array[0], 
-        mins:  time_array[1], 
-        secs:  time_array[2] || 0, 
+      {
+        hours: time_array[0],
+        mins:  time_array[1],
+        secs:  time_array[2] || 0,
         tz:    time_array[3] || Time.now.strftime("%z").to_i
       }
     end
