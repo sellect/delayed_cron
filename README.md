@@ -7,10 +7,10 @@ run cron jobs with sidekiq, delayed_job, resque, or sucker_punch
 ### DEPENDENCIES:
 - background process handler: sidekiq, delayed_job, resque, or sucker_punch
 
-### INSTALL 
+### INSTALL
 
 ```ruby
-gem "delayed_cron", "0.2.2"
+gem "delayed_cron", "0.2.4"
 ```
 
 ### USE IN MODEL
@@ -20,7 +20,7 @@ class Product < ActiveRecord::Base
   ...
 
   # Define in Model
-  # * this is an alternative to the methods array in config
+  # * this is an alternative to the cron_jobs array in config
   #
   # OPTIONS: *optional
   # - interval - override default_inteveral from setup
@@ -44,7 +44,10 @@ DelayedCron.setup do |config|
   config.default_interval = 10.minutes
 
   # array of methods to run at the above configured interval
-  config.cron_jobs = [ "SomeClass.expensive_task", "AnotherClass.other_expensive_task" ]
+  config.cron_jobs = [
+    "SomeClass.expensive_task", # will run at default interval
+    { job: "AnotherClass.other_expensive_task", interval: 1.hour } # override default
+  ]
 
 end
 ```
