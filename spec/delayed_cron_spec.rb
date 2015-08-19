@@ -69,6 +69,20 @@ describe DelayedCron do
     end
   end
 
+  describe ".timing_opts" do 
+
+    let(:options) do
+      { interval: 1.day, at: "05:00:00 -0400" }
+    end
+
+    it "collects the timing options" do 
+      interval = { interval: 1.day }
+      timing_opts = DelayedCron.timing_opts(options[:interval], options[:at])
+      expect(timing_opts).to eq(options)
+      expect(timing_opts).not_to eq(interval)
+    end
+  end
+
   describe ".process_job" do
 
     it "should call the cron jobs method" do
