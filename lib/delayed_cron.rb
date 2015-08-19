@@ -19,9 +19,11 @@ module DelayedCron
         job_is_hash = job.is_a?(Hash)
         job         = job_is_hash ? obj[:job] : job
         interval    = job_is_hash ? obj[:interval] : default_interval
+        options_at  = job_is_hash ? obj[:at] : nil
         klass, name = job.split(".")
         # TODO: raise error if interval is not set
-        DelayedCron.schedule(klass, name, { interval: interval })
+        options     = timing_opts(interval, options_at)
+        DelayedCron.schedule(klass, name, options)
       end
     end
 
@@ -37,6 +39,12 @@ module DelayedCron
         options[:interval] = adjust_interval(beginning_of_day(options[:interval].to_i), options[:at])
       end
       processor.enqueue_delayed_cron(klass, method_name, options)
+    end
+
+    def timing_opts(interval, options_at)
+      timing_opts = { interval: interval }
+      timing_opts.merge!(at: options_at) if options_at.present?
+      timing_opts
     end
 
     def process_job(klass, method_name, options)
