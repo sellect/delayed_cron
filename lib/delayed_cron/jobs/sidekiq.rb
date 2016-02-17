@@ -59,5 +59,3 @@ module DelayedCron
     end
   end
 end
-
-# "Kwi::Cron", "get_inventory", {"interval"=>81886, "at"=>"08:30:00 -0500"}
