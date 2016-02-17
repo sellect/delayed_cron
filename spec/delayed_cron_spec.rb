@@ -61,28 +61,6 @@ describe DelayedCron do
 
   end
 
-  describe ".schedule" do
-    it "schedules cron jobs" do
-      DelayedCron.schedule("SomeClass", "long_method", { interval: 1.hour })
-      expect(DelayedCron.processor).to be_processed_in :cron_job
-      expect(DelayedCron.processor.jobs.size).to eq(1)
-    end
-  end
-
-  describe ".timing_opts" do 
-
-    let(:options) do
-      { interval: 1.day, at: "05:00:00 -0400" }
-    end
-
-    it "collects the timing options" do 
-      interval = { interval: 1.day }
-      timing_opts = DelayedCron.timing_opts(options[:interval], options[:at])
-      expect(timing_opts).to eq(options)
-      expect(timing_opts).not_to eq(interval)
-    end
-  end
-
   describe ".process_job" do
 
     it "should call the cron jobs method" do
@@ -98,27 +76,6 @@ describe DelayedCron do
       DelayedCron.process_job(klass, name, {})
     end
 
-  end
-
-  describe ".beginning_of_day" do
-    it "returns the beginning of the day for the interval" do
-      seconds = 2.days.to_i
-      beginning_of_day_2_days_from_now = DelayedCron.beginning_of_day(seconds)
-      expect(beginning_of_day_2_days_from_now).to be <  2.days.from_now
-      expect(beginning_of_day_2_days_from_now).to be >  1.day.from_now
-    end
-  end
-
-  describe ".adjust_interval" do
-    it "adjusts the interval based on the :at option" do
-      # Set Time.now to January 1, 2014 12:00:00 PM
-      Timecop.freeze(Time.local(2014, 1, 1, 12, 0, 0))
-      interval = 9.days
-      adjusted_interval = interval - 12.hours
-      DelayedCron.processor.should_receive(:enqueue_delayed_cron)
-                 .with("SomeClass", "long_method", { interval: adjusted_interval.to_i, at: "00:00" })
-      DelayedCron.schedule("SomeClass", "long_method", { interval: interval, at: "00:00" })
-    end
   end
 
   describe "cron_job" do
