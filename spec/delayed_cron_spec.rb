@@ -8,12 +8,12 @@ describe DelayedCron do
 
     it "yields self" do
       DelayedCron.setup do |config|
-        DelayedCron.should == config
+        expect(DelayedCron).to eq(config)
       end
     end
 
     it "sends cron jobs to define_cron_jobs" do
-      DelayedCron.should_receive(:define_cron_jobs)
+      expect(DelayedCron).to receive(:define_cron_jobs)
       setup(default_interval: 1.hour)
     end
 
@@ -23,12 +23,12 @@ describe DelayedCron do
 
     it "should have a default_interval" do
       setup(default_interval: 1.hour)
-      DelayedCron.default_interval.should_not be_nil
+      expect(DelayedCron.default_interval).not_to be_nil
     end
 
     it "should have an array of cron_jobs" do
       setup(default_interval: 1.hour)
-      DelayedCron.cron_jobs.should be_an(Array)
+      expect(DelayedCron.cron_jobs).to be_an(Array)
     end
 
     let(:options) do
@@ -46,7 +46,7 @@ describe DelayedCron do
         job_is_hash = cron_job.is_a?(Hash)
         klass, method_name = job_is_hash ? cron_job[:job].split(".") : cron_job.split(".")
         interval = job_is_hash ? cron_job[:interval] : options[:default_interval]
-        DelayedCron.should_receive(:schedule).with(klass, method_name, { interval: interval })
+        expect(DelayedCron).to receive(:schedule).with(klass, method_name, { interval: interval })
       end
       setup(options)
     end
@@ -56,7 +56,7 @@ describe DelayedCron do
   describe ".processor" do
 
     it "returns processor" do
-      DelayedCron.processor.should == DelayedCron::Jobs::Sidekiq
+      expect(DelayedCron.processor).to eq(DelayedCron::Jobs::Sidekiq)
     end
 
   end
@@ -64,16 +64,16 @@ describe DelayedCron do
   describe ".process_job" do
 
     it "should call the cron jobs method" do
-      klass = build_class("SomeClass", "long_method", {})
-      klass.should_receive(:long_method)
-      DelayedCron.process_job(klass.name, "long_method", {})
+      klass = build_class("SomeClass", "long_method", {interval: 1.day})
+      expect(klass).to receive(:long_method)
+      DelayedCron.process_job(klass.name, "long_method", {interval: 1.day})
     end
 
     it "should reschedule the cron job after processing" do
       klass, name = "SomeClass", "test_method"
-      build_class(klass, name)
-      DelayedCron.should_receive(:schedule).with.with(klass, name, {})
-      DelayedCron.process_job(klass, name, {})
+      build_class(klass, name, {interval: 1.day})
+      expect(DelayedCron).to receive(:schedule).with(klass, name, {interval: 1.day})
+      DelayedCron.process_job(klass, name, {interval: 1.day})
     end
 
   end
@@ -82,21 +82,21 @@ describe DelayedCron do
     context 'if not present' do
       it "schedules cron jobs found in a model" do
         klass, name = "SomeClass", "some_method"
-        DelayedCron.should_receive(:schedule).with(klass, name, {})
+        expect(DelayedCron).to receive(:schedule).with(klass, name, {})
         build_class(klass, name)
       end
     end
     context 'if present and true' do
       it "schedules cron jobs found in a model" do
         klass, name = "SomeClass", "some_method"
-        DelayedCron.should_receive(:schedule).with(klass, name, {})
+        expect(DelayedCron).to receive(:schedule).with(klass, name, {})
         build_class(klass, name, {if: true})
       end
     end
     context 'if present and false' do
       it "schedules cron jobs found in a model" do
         klass, name = "SomeClass", "some_method"
-        DelayedCron.should_not_receive(:schedule).with(klass, name, {})
+        expect(DelayedCron).not_to receive(:schedule).with(klass, name, {})
         build_class(klass, name, {if: false})
       end
     end

@@ -64,7 +64,7 @@ describe DelayedCron::Scheduling do
       Timecop.freeze(Time.local(2014, 1, 1, 12, 0, 0))
       interval = 9.days
       adjusted_interval = interval - 12.hours
-      DelayedCron.processor.should_receive(:enqueue_delayed_cron)
+      expect(DelayedCron.processor).to receive(:enqueue_delayed_cron)
                  .with("SomeClass", "long_method", { interval: adjusted_interval.to_i, at: "00:00" })
       DelayedCron.schedule("SomeClass", "long_method", { interval: interval, at: "00:00" })
     end
