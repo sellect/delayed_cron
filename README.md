@@ -10,7 +10,7 @@ run cron jobs with sidekiq, delayed_job, resque, or sucker_punch
 ### INSTALL
 
 ```ruby
-gem "delayed_cron", "0.2.6"
+gem "delayed_cron", "~> 0.2.7"
 ```
 
 ### USE IN MODEL
