@@ -10,7 +10,7 @@ module DelayedCron
       def self.enqueue_delayed_cron(klass, method_name, options)
         options.symbolize_keys!
         unless do_not_enqueue?(klass, method_name, options)
-          perform_in(options[:interval], klass, method_name, options)
+          perform_in(options[:interval].to_i, klass, method_name, options)
         end
       end
 
