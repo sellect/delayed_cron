@@ -27,45 +27,22 @@ module DelayedCron
     end
 
     def add_interval(options)
-      date = beginning_of_day(options[:interval].to_i)
-      options[:interval] = adjust_interval(date, options[:at])
+      options[:interval] = convert_time_string_to_seconds_interval(options[:at])
       options
+    end
+
+    def convert_time_string_to_seconds_interval(scheduled_time_string)
+      day_in_seconds = 60 * 60 * 24
+      scheduled_time = Time.now.strftime("%Y-%m-%d #{scheduled_time_string}")
+      scheduled_time = DateTime.parse(scheduled_time, false).to_time
+      scheduled_time += day_in_seconds if Time.now >= scheduled_time
+      scheduled_time.to_i - Time.now.to_i
     end
 
     def timing_opts(interval, options_at)
       timing_opts = { interval: interval }
       timing_opts.merge!(at: options_at) if options_at.present?
       timing_opts
-    end
-
-    def beginning_of_day(seconds)
-      (Time.now + seconds).beginning_of_day
-    end
-
-    def adjust_interval(date, time_string)
-      adjusted_date(date, time_string).to_i - Time.now.to_i
-    end
-
-    def adjusted_date(date, time_string)
-      time = parse_time(time_string.split(/:|\ /).map(&:to_i))
-      DateTime.civil(
-        date.year,
-        date.month,
-        date.day,
-        time[:hours],
-        time[:mins],
-        time[:secs],
-        Rational(time[:tz], 2400)
-      )
-    end
-
-    def parse_time(time_array)
-      {
-        hours: time_array[0],
-        mins:  time_array[1],
-        secs:  time_array[2] || 0,
-        tz:    time_array[3] || Time.now.strftime("%z").to_i
-      }
     end
 
   end
