@@ -12,6 +12,9 @@ services:
 script:
 - bundle exec rake
 
+before_script:
+- export TZ=US/Eastern
+
 addons:
    code_climate:
      repo_token: f0884115cadbe82b33756e38a9cd32d5129304746a17126d6c7da02e7a69910a

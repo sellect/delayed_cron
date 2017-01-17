@@ -40,7 +40,8 @@ module DelayedCron
     def process_job(klass, method_name, options)
       # TODO: add ability to send args to klass method
       klass.constantize.send(method_name)
-      schedule(klass, method_name, options)
+      symbolized_options = options.collect{|k,v| [k.to_sym, v]}.to_h
+      schedule(klass, method_name, symbolized_options)
     end
 
   end
