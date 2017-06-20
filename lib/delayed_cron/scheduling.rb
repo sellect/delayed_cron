@@ -8,13 +8,13 @@ module DelayedCron
       job.enqueue(processor)
     end
 
-    def timing_opts(interval, time_zone, options_at)
-      timing_opts = { interval: interval }
-
-      timing_opts.merge!(at: options_at) if options_at.present?
-      timing_opts.merge!(time_zone: time_zone) if time_zone.present?
-
-      timing_opts
+    def timing_opts(job)
+      {
+        interval: job[:interval] || default_interval,
+        time_zone: job[:time_zone],
+        precision: job[:precision],
+        at: job[:at]
+      }.select { |_, value| !value.nil? }
     end
 
   end

@@ -19,15 +19,10 @@ module DelayedCron
       return false unless cron_jobs.present?
 
       cron_jobs.each do |job|
-        obj         = job
-        job_is_hash = job.is_a?(Hash)
-        job         = job_is_hash ? obj[:job] : job
-        interval    = job_is_hash ? obj[:interval] : default_interval
-        time_zone   = job_is_hash ? obj[:time_zone] : nil
-        options_at  = job_is_hash ? obj[:at] : nil
-        klass, name = job.split(".")
+        job = job.is_a?(Hash) ? job : { job: job }
+        klass, name = job[:job].split(".")
         # TODO: raise error if interval is not set
-        options     = timing_opts(interval, time_zone, options_at)
+        options     = timing_opts(job)
         DelayedCron.schedule(klass, name, options)
       end
     end

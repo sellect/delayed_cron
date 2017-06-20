@@ -23,15 +23,21 @@ describe DelayedCron::Scheduling do
 
     it "collects the timing options" do
       interval = { interval: 1.day }
-      timing_opts = DelayedCron.timing_opts(options[:interval], nil, options[:at])
+      timing_opts = DelayedCron.timing_opts(options)
       expect(timing_opts).to eq(options)
       expect(timing_opts).not_to eq(interval)
     end
 
     it "passes time_zone through" do
       options_with_zone = options.merge(time_zone: "UTC")
-      timing_opts = DelayedCron.timing_opts(options[:interval], "UTC", options[:at])
+      timing_opts = DelayedCron.timing_opts(options_with_zone)
       expect(timing_opts).to eq(options_with_zone)
+    end
+
+    it "ignores unknown parameters" do
+      timing_opts = DelayedCron.timing_opts(foo: :bar)
+
+      expect(timing_opts).to_not have_key(:foo)
     end
   end
 

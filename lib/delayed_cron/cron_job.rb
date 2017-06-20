@@ -36,11 +36,22 @@ module DelayedCron
     def convert_time_string_to_seconds_interval(scheduled_time_string, zone_name)
       zone_name ||= DelayedCron.default_time_zone
       zone = Time.find_zone!(zone_name)
-      day_in_seconds = 60 * 60 * 24
+
+      if hourly?
+        period_in_seconds = 60 * 60
+        scheduled_time_string = "%H:#{scheduled_time_string}"
+      else
+        period_in_seconds = 60 * 60 * 24
+      end
+
       scheduled_time = zone.now.strftime("%Y-%m-%d #{scheduled_time_string}")
       scheduled_time = zone.parse(scheduled_time)
-      scheduled_time += day_in_seconds if zone.now >= scheduled_time
+      scheduled_time += period_in_seconds if zone.now >= scheduled_time
       scheduled_time.to_i - zone.now.to_i
+    end
+
+    def hourly?
+      raw_options[:precision].to_s == "hourly"
     end
 
   end

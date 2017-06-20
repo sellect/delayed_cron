@@ -71,8 +71,9 @@ module DelayedCron
     end
 
     describe ".convert_time_string_to_seconds_interval" do
+      let(:job) { described_class.new({}) }
+
       let(:next_occurrence) do
-        job = described_class.new({})
         job.send(:convert_time_string_to_seconds_interval, scheduled_time, "Eastern Time (US & Canada)")
       end
       # Set Time.now to January 1, 2014 12:00:00 PM
@@ -106,6 +107,28 @@ module DelayedCron
         let(:scheduled_time) { "11:00:00 -0500" }
         it "converts a time string to seconds" do
           Timecop.freeze(Time.utc(2014, 6, 1, 12, 0, 0))
+
+          expect(next_occurrence).to be(known_interval)
+        end
+      end
+
+      context "hourly interval" do
+        let(:job) { described_class.new(precision: :hourly) }
+        let(:known_interval) { 300 }
+
+        let(:scheduled_time) { "05:00 -0500" }
+        it "converts a time string to seconds" do
+          expect(next_occurrence).to be(known_interval)
+        end
+      end
+
+      context "next hour" do
+        let(:job) { described_class.new(precision: :hourly) }
+        let(:known_interval) { 300 }
+
+        let(:scheduled_time) { "00:00" }
+        it "converts a time string to seconds" do
+          Timecop.freeze(Time.utc(2014, 1, 1, 12, 55, 0))
 
           expect(next_occurrence).to be(known_interval)
         end
