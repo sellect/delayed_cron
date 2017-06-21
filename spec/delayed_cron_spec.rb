@@ -26,6 +26,17 @@ describe DelayedCron do
       expect(DelayedCron.default_interval).not_to be_nil
     end
 
+    it "should have a default_time_zone" do
+      setup(default_time_zone: "UTC")
+      expect(DelayedCron.default_time_zone).to eq "UTC"
+    end
+
+    it "should default TZ to Eastern Time when not specified" do
+      setup(cron_jobs: [{job: "Test"}])
+
+      expect(DelayedCron.default_time_zone).to eq "Eastern Time (US & Canada)"
+    end
+
     it "should have an array of cron_jobs" do
       setup(default_interval: 1.hour)
       expect(DelayedCron.cron_jobs).to be_an(Array)

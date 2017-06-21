@@ -21,6 +21,7 @@ end
 def setup(options)
   DelayedCron.setup do |config|
     config.default_interval = options[:default_interval]
+    config.default_time_zone = options[:default_time_zone]
     config.cron_jobs = options[:cron_jobs] || []
   end
 end
@@ -44,6 +45,6 @@ def build_class(class_name, name, options = {})
     end
 
   end
-  
+
   klass
 end

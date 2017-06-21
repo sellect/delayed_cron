@@ -4,7 +4,7 @@ require 'delayed_cron/railtie'
 
 module DelayedCron
 
-  mattr_accessor :default_interval, :cron_jobs
+  mattr_accessor :default_interval, :default_time_zone, :cron_jobs
 
   class << self
 
@@ -17,15 +17,12 @@ module DelayedCron
 
     def define_cron_jobs
       return false unless cron_jobs.present?
+
       cron_jobs.each do |job|
-        obj         = job
-        job_is_hash = job.is_a?(Hash)
-        job         = job_is_hash ? obj[:job] : job
-        interval    = job_is_hash ? obj[:interval] : default_interval
-        options_at  = job_is_hash ? obj[:at] : nil
-        klass, name = job.split(".")
+        job = job.is_a?(Hash) ? job : { job: job }
+        klass, name = job[:job].split(".")
         # TODO: raise error if interval is not set
-        options     = timing_opts(interval, options_at)
+        options     = timing_opts(job)
         DelayedCron.schedule(klass, name, options)
       end
     end
@@ -42,6 +39,10 @@ module DelayedCron
       klass.constantize.send(method_name)
       symbolized_options = options.collect{|k,v| [k.to_sym, v]}.to_h
       schedule(klass, method_name, symbolized_options)
+    end
+
+    def default_time_zone
+      @@default_time_zone || "Eastern Time (US & Canada)"
     end
 
   end
