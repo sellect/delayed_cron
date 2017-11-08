@@ -76,8 +76,11 @@ module DelayedCron
       let(:next_occurrence) do
         job.send(:convert_time_string_to_seconds_interval, scheduled_time, "Eastern Time (US & Canada)")
       end
+      let(:zone) { Time.find_zone!("Eastern Time (US & Canada)") }
+
       # Set Time.now to January 1, 2014 12:00:00 PM
       before { Timecop.freeze(Time.utc(2014, 1, 1, 12, 0, 0)) }
+
       context "next occurrence is today" do
         let(:known_interval) { 21600 }
         let(:scheduled_time) { "13:00:00 -0500" }
@@ -131,6 +134,35 @@ module DelayedCron
           Timecop.freeze(Time.utc(2014, 1, 1, 12, 55, 0))
 
           expect(next_occurrence).to be(known_interval)
+        end
+
+        it 'handles DST end' do
+          time = zone.local(2017, 11, 5, 1, 0) + 1.hour # ST start
+          Timecop.freeze(time)
+
+          expect(next_occurrence).to eq(1.hour.to_i)
+        end
+      end
+
+      context 'DST ends before next time' do
+        let(:scheduled_time) { "00:05:00" }
+
+        it 'adds an extra hour to the offset' do
+          time = zone.local(2017, 11, 5, 0, 5)
+          Timecop.freeze(time)
+
+          expect(next_occurrence).to eq(25.hours.to_i)
+        end
+      end
+
+      context 'calculation is on day of DST end' do
+        let(:scheduled_time) { "00:05:00" }
+
+        it 'still calculates correct offset' do
+          time = zone.local(2017, 11, 5, 23, 5)
+          Timecop.freeze(time)
+
+          expect(next_occurrence).to eq(1.hour.to_i)
         end
       end
 

@@ -38,15 +38,15 @@ module DelayedCron
       zone = Time.find_zone!(zone_name)
 
       if hourly?
-        period_in_seconds = 60 * 60
+        period_duration = 1.hour
         scheduled_time_string = "%H:#{scheduled_time_string}"
       else
-        period_in_seconds = 60 * 60 * 24
+        period_duration = 1.day
       end
 
       scheduled_time = zone.now.strftime("%Y-%m-%d #{scheduled_time_string}")
       scheduled_time = zone.parse(scheduled_time)
-      scheduled_time += period_in_seconds if zone.now >= scheduled_time
+      scheduled_time += period_duration while zone.now >= scheduled_time
       scheduled_time.to_i - zone.now.to_i
     end
 

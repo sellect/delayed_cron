@@ -1,3 +1,4 @@
+require 'active_support/all'
 require 'delayed_cron/jobs'
 require 'delayed_cron/scheduling'
 require 'delayed_cron/railtie'
